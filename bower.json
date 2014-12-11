@@ -1,0 +1,17 @@
+{
+  "name": "esa6",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.3.6",
+    "traceur-runtime": "0.0.79"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
