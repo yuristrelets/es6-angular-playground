@@ -10,7 +10,7 @@ class New extends Controller {
   }
 
   init() {
-    console.log('hello new', this);
+    console.log('-> hello new', this);
   }
 }
 

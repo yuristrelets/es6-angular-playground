@@ -3,10 +3,11 @@
 <head>
   <title>ES6 Test</title>
 </head>
-<body ng-controller="CoreController as core" ng-cloak>
-  {{::core.qwerty}}
+<body ng-controller="CoreController as core">
+  {{ ::core.qwerty }}
 
-  <div ng-controller="NewController"></div>
+  <my-dir></my-dir>
+  <qwerty></qwerty>
 
   <script src="../bower_components/angular/angular.js"></script>
   <script src="../bower_components/traceur-runtime/traceur-runtime.js"></script>

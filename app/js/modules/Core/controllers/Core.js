@@ -10,9 +10,13 @@ class Core extends Controller {
   }
 
   init() {
-    console.log('hello', this);
+    console.log('-> hello', this);
 
-    this.qwerty = 'qwerty';
+    this.qwerty = 'qwerty222';
+  }
+
+  ccc() {
+    return 'cool55!';
   }
 }
 
