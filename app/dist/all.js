@@ -4,21 +4,23 @@ System.register("modules/Core/module", [], function() {
   function require(path) {
     return $traceurRuntime.require("modules/Core/module", path);
   }
-  var lib = System.get("lib").default;
-  var CoreController = System.get("modules/Core/controllers/Core").default;
-  var DD = System.get("modules/Core/directives/Dd").default;
-  var DDD = function DDD() {
-    $traceurRuntime.superConstructor($DDD).apply(this, arguments);
+  var Module = System.get("lib").Module;
+  var Controller = System.get("lib").Controller;
+  var CoreModule = function CoreModule() {
+    $traceurRuntime.superConstructor($CoreModule).apply(this, arguments);
   };
-  var $DDD = DDD;
-  ($traceurRuntime.createClass)(DDD, {init: function() {
-      $traceurRuntime.superGet(this, $DDD.prototype, "init").call(this);
-      this.config.name = 'qwerty';
-    }}, {}, DD);
-  var core = angular.module('Core', []);
-  core.z.controller(CoreController);
-  core.z.directive(DDD);
-  var $__default = core;
+  var $CoreModule = CoreModule;
+  ($traceurRuntime.createClass)(CoreModule, {}, {}, Module);
+  var CoreController = function CoreController() {
+    $traceurRuntime.superConstructor($CoreController).apply(this, arguments);
+  };
+  var $CoreController = CoreController;
+  ($traceurRuntime.createClass)(CoreController, {}, {get $meta() {
+      return {di: ['$http']};
+    }}, Controller);
+  var m = new CoreModule('Core');
+  m.controller(CoreController);
+  var $__default = m;
   return {get default() {
       return $__default;
     }};
@@ -117,7 +119,7 @@ System.register("modules/Core/directives/Dd", [], function() {
         scope: true,
         replace: true,
         template: '<div class="qwerty">wfwefwef</div>',
-        ctrl: Ctrl222
+        ctrl: Ctrl
       };
     },
     link: function(scope, el, attrs) {
@@ -145,109 +147,61 @@ System.register("lib", [], function() {
   }
   if (!angular)
     throw ('Angular is undefined!');
-  var originalModule = angular.module;
-  angular.module = (function(name, reqs, fn) {
-    console.log(name, reqs, fn);
-    var result = originalModule(name, reqs, fn);
-    result.z = {
-      controller: function(ctrl) {
-        if (!ctrl || !ctrl.$conf) {
-          throw new Error('Bad controller class!');
-        }
-        console.dir(ctrl.annotate);
-        console.log('-> ctrl', ctrl.$conf.name, ctrl.annotate);
-        return result.controller(ctrl.$conf.name, ctrl.annotate);
-      },
-      directive: function(cls) {
-        var dir = new cls();
-        var fn = (function() {
-          return dir.config;
-        });
-        return result.directive(dir.name, [fn]);
-      }
-    };
-    return result;
-  });
-  function defineApp(name) {
-    var depts = arguments[1] !== (void 0) ? arguments[1] : [];
-    var internalDepts = arguments[2] !== (void 0) ? arguments[2] : [];
-    for (var $__1 = internalDepts[$traceurRuntime.toProperty(Symbol.iterator)](),
-        $__2; !($__2 = $__1.next()).done; ) {
-      var dept = $__2.value;
-      {
-        if (dept.name) {
-          depts.push(dept.name);
-        } else {
-          throw ('Name property not found in dependencies!');
-        }
-      }
-    }
-    var app = angular.module(name, depts);
-    angular.element(document).ready((function() {
-      angular.bootstrap(document, [app.name]);
-    }));
-  }
-  function defineController(ctrl, to) {
-    var c = ctrl.$conf;
-    var inject = Array.prototype.concat("$scope", c.inject, ctrl);
-    console.log(inject);
-    to.controller(c.name, inject);
-  }
-  function defineModule(name) {
-    var options = arguments[1] !== (void 0) ? arguments[1] : {};
-    var m = angular.module(name, options.depts || []);
-    if (options.controllers) {
-      for (var $__1 = options.controllers[$traceurRuntime.toProperty(Symbol.iterator)](),
-          $__2; !($__2 = $__1.next()).done; ) {
-        var controller = $__2.value;
-        {
-          controller.register(m);
-        }
-      }
-    }
-    return {name: name};
-  }
-  var $__default = {
-    defineApp: defineApp,
-    defineModule: defineModule
-  };
-  var Controller = function Controller() {
-    for (var args = [],
-        $__3 = 0; $__3 < arguments.length; $__3++)
-      args[$__3] = arguments[$__3];
-    var c = ['$scope'].concat(this.constructor.$conf.inject);
-    console.log(this.constructor.$conf.name, c);
-    for (var i = 0,
-        size = args.length; i < size; i++) {
-      this[("$" + c[i].replace('$', ''))] = args[i];
-    }
-    this.init();
-  };
-  ($traceurRuntime.createClass)(Controller, {init: function() {}}, {get annotate() {
-      var reqs = this.$conf.inject,
-          baseReqs = ['$scope'];
-      return Array.isArray(reqs) ? baseReqs.concat(reqs, this) : baseReqs.concat(this);
-    }});
-  var Directive = function Directive() {
-    console.log('-> dir hello!');
-    this.init();
-    if (this.config) {
-      this.name = this.config.name;
-      console.log('-> dir ctrl', this.config.controller.$conf);
-      this.config.link = this.link.bind(this);
-      this.config.controller = this.config.controller.annotate;
-    }
-  };
-  ($traceurRuntime.createClass)(Directive, {}, {});
-  return {
-    get default() {
-      return $__default;
+  var _app;
+  var _modules = [];
+  var Router = function Router() {};
+  ($traceurRuntime.createClass)(Router, {}, {});
+  var Controller = function Controller() {};
+  ($traceurRuntime.createClass)(Controller, {init: function() {}}, {
+    get $meta() {
+      return {
+        di: [],
+        route: '',
+        resolve: {}
+      };
     },
+    get $di() {
+      return ['$scope'].concat(this.constructor.$meta.di || []);
+    },
+    $init: function() {
+      var me = this.constructor;
+      console.dir(this);
+    },
+    $export: function() {
+      return this.constructor.$di.concat(this);
+    }
+  });
+  var Module = function Module(name) {
+    var reqs = arguments[1] !== (void 0) ? arguments[1] : [];
+    this.module = angular.module(name, reqs);
+    _modules.push(this);
+  };
+  ($traceurRuntime.createClass)(Module, {
+    controller: function(ctrl) {
+      var conf = ctrl.$meta;
+      console.log('controller', conf);
+      console.log(ctrl.name);
+      ctrl.$init();
+    },
+    run: function(runner) {}
+  }, {});
+  var Application = function Application(name, reqs) {
+    this.name = name;
+    this.reqs = reqs;
+  };
+  ($traceurRuntime.createClass)(Application, {run: function() {
+      this.app = angular.module(this.name, this.reqs);
+      _app = this;
+    }}, {});
+  return {
     get Controller() {
       return Controller;
     },
-    get Directive() {
-      return Directive;
+    get Module() {
+      return Module;
+    },
+    get Application() {
+      return Application;
     }
   };
 });

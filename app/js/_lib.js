@@ -1,102 +1,5 @@
 if(!angular) throw('Angular is undefined!');
 
-var _app;
-var _modules = [];
-
-class Router {
-
-}
-
-export class Controller {
-  constructor() {
-
-  }
-
-  init() {}
-
-  static get $meta() {
-    return {
-      di: [],
-      route: '',
-      resolve: {}
-    }
-  }
-
-  static get $di() {
-    return ['$scope'].concat(this.constructor.$meta.di || []);
-  }
-
-  static $init() {
-    let me = this.constructor;
-
-    console.dir(this);
-  }
-
-  static $export() {
-    return this.constructor.$di.concat(this);
-  }
-}
-
-export class Module {
-  constructor(name, reqs = []) {
-    this.module = angular.module(name, reqs);
-
-    _modules.push(this);
-  }
-
-  controller(ctrl) {
-    let conf = ctrl.$meta;
-
-    console.log('controller', conf);
-    console.log(ctrl.name);
-
-    ctrl.$init();
-
-    //this.module.controller(conf.name, ctrl.$export());
-  }
-
-  run(runner) {
-
-  }
-}
-
-export class Application {
-  constructor(name, reqs) {
-    this.name = name;
-    this.reqs = reqs;
-  }
-
-  run() {
-    this.app = angular.module(this.name, this.reqs);
-
-    _app = this;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 var originalModule = angular.module;
 
 angular.module = (name, reqs, fn) => {
@@ -219,4 +122,4 @@ class Directive {
 
     }
   }
-}*/
+}

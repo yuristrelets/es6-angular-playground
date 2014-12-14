@@ -27,7 +27,7 @@ class DD extends Directive {
       scope: true,
       replace: true,
       template: '<div class="qwerty">wfwefwef</div>',
-      ctrl: Ctrl222
+      ctrl: Ctrl
     }
   }
 

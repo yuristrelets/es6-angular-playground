@@ -1,34 +1,33 @@
-import lib from 'lib';
+//import lib from 'lib';
 
-import CoreController from './controllers/Core';
+//import CoreController from './controllers/Core';
 //import NewController from './controllers/New';
-import DD from './directives/Dd';
+//import DD from './directives/Dd';
 
+import {Module} from 'lib';
+import {Controller} from 'lib';
 
+class CoreModule extends Module {}
 
-
-class DDD extends DD {
-  init() {
-    super.init();
-
-    this.config.name = 'qwerty';
+class CoreController extends Controller {
+  static get $meta() {
+    return {
+      di: ['$http']
+    }
   }
 }
 
-/*
-export default lib.defineModule('Core', {
-  depts: [],
-  config: [],
-  controllers: [CoreController],
-  directives: [],
-  filters: [],
-  factories: [],
-  resources: [],
-  services: []
-});*/
 
-var core = angular.module('Core', []);
+
+var m = new CoreModule('Core');
+
+m.controller(CoreController);
+
+
+
+
+/*var core = angular.module('Core', []);
 core.z.controller(CoreController);
-core.z.directive(DDD);
+core.z.directive(DD);*/
 
-export default core;
+export default m;
